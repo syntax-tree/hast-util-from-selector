@@ -1,6 +1,6 @@
 {
   "name": "hast-util-from-selector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "hast utility to parse CSS selectors to hast nodes",
   "license": "MIT",
   "keywords": [
