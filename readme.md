@@ -92,6 +92,11 @@ attack as values are injected into the syntax tree.
 Either do not use user input in `from-selector` or use
 [`hast-util-santize`][sanitize].
 
+## Related
+
+*   [`hast-util-parse-selector`](https://github.com/syntax-tree/hast-util-parse-selector)
+    — create an element from a simple CSS selector
+
 ## Contribute
 
 See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
