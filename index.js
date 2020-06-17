@@ -21,9 +21,9 @@ parser.registerNestingOperators('>', '+', '~')
 parser.registerAttrEqualityMods('~', '|', '^', '$', '*')
 
 function fromSelector(selector, space) {
-  var opts = (typeof space === 'string' ? {space: space} : space) || {}
+  var options = (typeof space === 'string' ? {space: space} : space) || {}
   var result = parser.parse(selector || '')
-  var config = {space: opts.space || 'html', root: true}
+  var config = {space: options.space || 'html', root: true}
 
   return compile(result, config) || build(config.space)()
 }

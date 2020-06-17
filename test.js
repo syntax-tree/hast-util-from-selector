@@ -5,11 +5,11 @@ var h = require('hastscript')
 var s = require('hastscript/svg')
 var from = require('.')
 
-test('fromSelector()', function(t) {
+test('fromSelector()', function (t) {
   t.equal(typeof from, 'function', 'should expose a function')
 
   t.throws(
-    function() {
+    function () {
       from('@supports (transform-origin: 5% 5%) {}')
     },
     /Error: Rule expected but "@" found/,
@@ -17,7 +17,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from('a, b')
     },
     /Error: Cannot handle selector list/,
@@ -25,7 +25,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from('a + b')
     },
     /Error: Cannot handle sibling combinator `\+` at root/,
@@ -33,7 +33,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from('a ~ b')
     },
     /Error: Cannot handle sibling combinator `~` at root/,
@@ -41,7 +41,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from('[foo%=bar]')
     },
     /Error: Expected "=" but "%" found./,
@@ -49,7 +49,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from('[foo~=bar]')
     },
     /Error: Cannot handle attribute equality modifier `~=`/,
@@ -57,7 +57,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from(':active')
     },
     /Error: Cannot handle pseudo-selector `active`/,
@@ -65,7 +65,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from(':nth-foo(2n+1)')
     },
     /Error: Cannot handle pseudo-selector `nth-foo`/,
@@ -73,7 +73,7 @@ test('fromSelector()', function(t) {
   )
 
   t.throws(
-    function() {
+    function () {
       from('::before')
     },
     /Error: Cannot handle pseudo-element or empty pseudo-class/,
