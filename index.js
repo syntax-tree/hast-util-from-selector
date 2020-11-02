@@ -7,12 +7,13 @@ var s = require('hastscript/svg')
 var zwitch = require('zwitch')
 var Parser = require('css-selector-parser').CssSelectorParser
 
-var compile = zwitch('type')
-var handlers = compile.handlers
-
-handlers.selectors = selectors
-handlers.ruleSet = ruleSet
-handlers.rule = rule
+var compile = zwitch('type', {
+  handlers: {
+    selectors: selectors,
+    ruleSet: ruleSet,
+    rule: rule
+  }
+})
 
 var parser = new Parser()
 
@@ -21,11 +22,9 @@ parser.registerNestingOperators('>', '+', '~')
 parser.registerAttrEqualityMods('~', '|', '^', '$', '*')
 
 function fromSelector(selector, space) {
-  var options = (typeof space === 'string' ? {space: space} : space) || {}
-  var result = parser.parse(selector || '')
-  var config = {space: options.space || 'html', root: true}
+  var config = {space: (space && space.space) || space || 'html', root: true}
 
-  return compile(result, config) || build(config.space)()
+  return compile(parser.parse(selector || ''), config) || build(config.space)()
 }
 
 function selectors() {
@@ -37,20 +36,15 @@ function ruleSet(query, config) {
 }
 
 function rule(query, config) {
-  var subrule = query.rule
-  var name = query.tagName
   var parentSpace = config.space
-  var space = parentSpace
-  var sibling = false
+  var name = query.tagName === '*' ? '' : query.tagName
+  var space = parentSpace === 'html' && name === 'svg' ? 'svg' : parentSpace
+  var sibling
   var operator
   var node
 
-  if (name === '*') {
-    name = ''
-  }
-
-  if (subrule) {
-    operator = subrule.nestingOperator
+  if (query.rule) {
+    operator = query.rule.nestingOperator
     sibling = operator === '+' || operator === '~'
 
     if (sibling && config.root) {
@@ -60,11 +54,6 @@ function rule(query, config) {
     }
   }
 
-  // Switch to SVG when needed.
-  if (space === 'html' && name === 'svg') {
-    space = 'svg'
-  }
-
   node = build(space)(
     name,
     Object.assign(
@@ -72,10 +61,10 @@ function rule(query, config) {
       pseudosToHast(query.pseudos || []),
       attrsToHast(query.attrs || [])
     ),
-    !subrule || sibling ? [] : compile(subrule, {space: space})
+    !query.rule || sibling ? [] : compile(query.rule, {space: space})
   )
 
-  return sibling ? [node, compile(subrule, {space: parentSpace})] : node
+  return sibling ? [node, compile(query.rule, {space: parentSpace})] : node
 }
 
 function pseudosToHast(pseudos) {
@@ -94,27 +83,22 @@ function pseudosToHast(pseudos) {
 
 function attrsToHast(attrs) {
   var props = {}
-  var length = attrs.length
   var index = -1
   var attr
-  var name
-  var operator
 
-  while (++index < length) {
+  while (++index < attrs.length) {
     attr = attrs[index]
-    name = attr.name
-    operator = attr.operator
 
-    if (operator) {
-      if (operator === '=') {
-        props[name] = attr.value
+    if (attr.operator) {
+      if (attr.operator === '=') {
+        props[attr.name] = attr.value
       } else {
         throw new Error(
-          'Cannot handle attribute equality modifier `' + operator + '`'
+          'Cannot handle attribute equality modifier `' + attr.operator + '`'
         )
       }
     } else {
-      props[name] = true
+      props[attr.name] = true
     }
   }
 
