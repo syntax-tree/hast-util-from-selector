@@ -79,24 +79,17 @@ function rule(query, config) {
 }
 
 function pseudosToHast(pseudos) {
-  var props = {}
-  var length = pseudos.length
-  var index = -1
-  var pseudo
-  var name
+  var pseudo = pseudos[0]
 
-  while (++index < length) {
-    pseudo = pseudos[index]
-    name = pseudo.name
-
-    if (name) {
-      throw new Error('Cannot handle pseudo-selector `' + name + '`')
-    } else {
-      throw new Error('Cannot handle pseudo-element or empty pseudo-class')
+  if (pseudo) {
+    if (pseudo.name) {
+      throw new Error('Cannot handle pseudo-selector `' + pseudo.name + '`')
     }
+
+    throw new Error('Cannot handle pseudo-element or empty pseudo-class')
   }
 
-  return props
+  return {}
 }
 
 function attrsToHast(attrs) {
