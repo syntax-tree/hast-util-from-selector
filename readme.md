@@ -113,9 +113,9 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://img.shields.io/travis/syntax-tree/hast-util-from-selector.svg
+[build-badge]: https://github.com/syntax-tree/hast-util-from-selector/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/syntax-tree/hast-util-from-selector
+[build]: https://github.com/syntax-tree/hast-util-from-selector/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-selector.svg
 
