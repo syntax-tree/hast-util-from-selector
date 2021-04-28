@@ -139,15 +139,21 @@ test('fromSelector()', function (t) {
   t.deepEqual(fromSelector('altGlyph', 'svg').tagName, 'altGlyph', 'space (#2)')
 
   t.deepEqual(
-    fromSelector('svg altGlyph').children[0].tagName,
+    fromSelector('altGlyph', {space: 'svg'}).tagName,
     'altGlyph',
     'space (#3)'
   )
 
   t.deepEqual(
+    fromSelector('svg altGlyph').children[0].tagName,
+    'altGlyph',
+    'space (#4)'
+  )
+
+  t.deepEqual(
     fromSelector('div svg + altGlyph').children[1].tagName,
     'altglyph',
-    'space (#4)'
+    'space (#5)'
   )
 
   t.deepEqual(
@@ -159,7 +165,7 @@ test('fromSelector()', function (t) {
         s('circle', {cx: '10', cy: '10', r: '10'}, [s('altGlyph')])
       ])
     ]),
-    'space (#5)'
+    'space (#6)'
   )
 
   t.end()
