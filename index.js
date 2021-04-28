@@ -1,30 +1,27 @@
-'use strict'
-
-module.exports = fromSelector
-
-var h = require('hastscript')
-var s = require('hastscript/svg')
-var zwitch = require('zwitch')
-var Parser = require('css-selector-parser').CssSelectorParser
+import {h, s} from 'hastscript'
+import {zwitch} from 'zwitch'
+import {CssSelectorParser} from 'css-selector-parser'
 
 var compile = zwitch('type', {
   handlers: {
-    selectors: selectors,
-    ruleSet: ruleSet,
-    rule: rule
+    selectors,
+    ruleSet,
+    rule
   }
 })
 
-var parser = new Parser()
+var parser = new CssSelectorParser()
 
 parser.registerNestingOperators('>', '+', '~')
 // Register these so we can throw nicer errors.
 parser.registerAttrEqualityMods('~', '|', '^', '$', '*')
 
-function fromSelector(selector, space) {
+export function fromSelector(selector, space) {
   var config = {space: (space && space.space) || space || 'html', root: true}
 
-  return compile(parser.parse(selector || ''), config) || build(config.space)()
+  return (
+    compile(parser.parse(selector || ''), config) || build(config.space)('')
+  )
 }
 
 function selectors() {
@@ -37,7 +34,7 @@ function ruleSet(query, config) {
 
 function rule(query, config) {
   var parentSpace = config.space
-  var name = query.tagName === '*' ? '' : query.tagName
+  var name = query.tagName === '*' ? '' : query.tagName || ''
   var space = parentSpace === 'html' && name === 'svg' ? 'svg' : parentSpace
   var sibling
   var operator
@@ -61,7 +58,7 @@ function rule(query, config) {
       pseudosToHast(query.pseudos || []),
       attrsToHast(query.attrs || [])
     ),
-    !query.rule || sibling ? [] : compile(query.rule, {space: space})
+    !query.rule || sibling ? [] : compile(query.rule, {space})
   )
 
   return sibling ? [node, compile(query.rule, {space: parentSpace})] : node

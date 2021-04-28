@@ -12,6 +12,9 @@
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -21,9 +24,9 @@ npm install hast-util-from-selector
 ## Use
 
 ```js
-var from = require('hast-util-from-selector')
+import {fromSelector} from 'hast-util-from-selector'
 
-console.log(from('p svg[viewbox=0 0 10 10] circle[cx=10][cy=10][r=10]'))
+console.log(fromSelector('p svg[viewbox=0 0 10 10] circle[cx=10][cy=10][r=10]'))
 ```
 
 Yields:
@@ -52,6 +55,9 @@ Yields:
 ```
 
 ## API
+
+This package exports the following identifiers: `fromSelector`.
+There is no default export.
 
 ### `fromSelector([selector][, options])`
 
