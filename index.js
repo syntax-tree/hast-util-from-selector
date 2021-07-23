@@ -22,9 +22,9 @@ import {h, s} from 'hastscript'
 import {zwitch} from 'zwitch'
 import {CssSelectorParser} from 'css-selector-parser'
 
-var compile = zwitch('type', {handlers: {selectors, ruleSet, rule}})
+const compile = zwitch('type', {handlers: {selectors, ruleSet, rule}})
 
-var parser = new CssSelectorParser()
+const parser = new CssSelectorParser()
 
 parser.registerNestingOperators('>', '+', '~')
 // Register these so we can throw nicer errors.
@@ -37,7 +37,7 @@ parser.registerAttrEqualityMods('~', '|', '^', '$', '*')
  */
 export function fromSelector(selector, space) {
   /** @type {Context} */
-  var config = {
+  const config = {
     space:
       (space && typeof space === 'object' && space.space) ||
       (typeof space === 'string' && space) ||
@@ -74,13 +74,11 @@ function ruleSet(query, config) {
  * @returns {HastElement|Array.<HastElement>}
  */
 function rule(query, config) {
-  var parentSpace = config.space
-  var name = query.tagName === '*' ? '' : query.tagName || ''
-  var space = parentSpace === 'html' && name === 'svg' ? 'svg' : parentSpace
+  const parentSpace = config.space
+  const name = query.tagName === '*' ? '' : query.tagName || ''
+  const space = parentSpace === 'html' && name === 'svg' ? 'svg' : parentSpace
   /** @type {boolean} */
-  var sibling
-  /** @type {HastElement} */
-  var node
+  let sibling
 
   if (query.rule) {
     sibling =
@@ -96,7 +94,7 @@ function rule(query, config) {
   }
 
   // @ts-ignore Assume one or more elements is returned.
-  node = build(space)(
+  const node = build(space)(
     name,
     Object.assign(
       {id: query.id, className: query.classNames},
@@ -115,7 +113,7 @@ function rule(query, config) {
  * @returns {HastProperties}
  */
 function pseudosToHast(pseudos) {
-  var pseudo = pseudos[0]
+  const pseudo = pseudos[0]
 
   if (pseudo) {
     if (pseudo.name) {
@@ -133,11 +131,11 @@ function pseudosToHast(pseudos) {
  * @returns {HastProperties}
  */
 function attrsToHast(attrs) {
-  var index = -1
+  let index = -1
   /** @type {HastProperties} */
-  var props = {}
+  const props = {}
   /** @type {CssRuleAttr} */
-  var attr
+  let attr
 
   while (++index < attrs.length) {
     attr = attrs[index]

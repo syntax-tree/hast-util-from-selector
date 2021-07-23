@@ -2,9 +2,9 @@ import test from 'tape'
 import {h, s} from 'hastscript'
 import {fromSelector} from './index.js'
 
-test('fromSelector()', function (t) {
+test('fromSelector()', (t) => {
   t.throws(
-    function () {
+    () => {
       fromSelector('@supports (transform-origin: 5% 5%) {}')
     },
     /Error: Rule expected but "@" found/,
@@ -12,7 +12,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector('a, b')
     },
     /Error: Cannot handle selector list/,
@@ -20,7 +20,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector('a + b')
     },
     /Error: Cannot handle sibling combinator `\+` at root/,
@@ -28,7 +28,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector('a ~ b')
     },
     /Error: Cannot handle sibling combinator `~` at root/,
@@ -36,7 +36,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector('[foo%=bar]')
     },
     /Error: Expected "=" but "%" found./,
@@ -44,7 +44,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector('[foo~=bar]')
     },
     /Error: Cannot handle attribute equality modifier `~=`/,
@@ -52,7 +52,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector(':active')
     },
     /Error: Cannot handle pseudo-selector `active`/,
@@ -60,7 +60,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector(':nth-foo(2n+1)')
     },
     /Error: Cannot handle pseudo-selector `nth-foo`/,
@@ -68,7 +68,7 @@ test('fromSelector()', function (t) {
   )
 
   t.throws(
-    function () {
+    () => {
       fromSelector('::before')
     },
     /Error: Cannot handle pseudo-element or empty pseudo-class/,
