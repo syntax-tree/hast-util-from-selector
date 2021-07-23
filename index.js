@@ -22,6 +22,7 @@ import {h, s} from 'hastscript'
 import {zwitch} from 'zwitch'
 import {CssSelectorParser} from 'css-selector-parser'
 
+// @ts-expect-error: hush.
 const compile = zwitch('type', {handlers: {selectors, ruleSet, rule}})
 
 const parser = new CssSelectorParser()
@@ -46,7 +47,7 @@ export function fromSelector(selector, space) {
   }
 
   return (
-    // @ts-ignore Assume one element is returned.
+    // @ts-expect-error Assume one element is returned.
     compile(parser.parse(selector || ''), config) || build(config.space)('')
   )
 }
@@ -64,7 +65,7 @@ function selectors(_) {
  * @returns {HastElement|Array.<HastElement>}
  */
 function ruleSet(query, config) {
-  // @ts-ignore Assume one or more elements is returned.
+  // @ts-expect-error Assume one or more elements is returned.
   return compile(query.rule, config)
 }
 
@@ -77,7 +78,7 @@ function rule(query, config) {
   const parentSpace = config.space
   const name = query.tagName === '*' ? '' : query.tagName || ''
   const space = parentSpace === 'html' && name === 'svg' ? 'svg' : parentSpace
-  /** @type {boolean} */
+  /** @type {boolean|undefined} */
   let sibling
 
   if (query.rule) {
@@ -93,7 +94,7 @@ function rule(query, config) {
     }
   }
 
-  // @ts-ignore Assume one or more elements is returned.
+  // @ts-expect-error Assume one or more elements is returned.
   const node = build(space)(
     name,
     Object.assign(
@@ -104,7 +105,7 @@ function rule(query, config) {
     !query.rule || sibling ? [] : compile(query.rule, {space})
   )
 
-  // @ts-ignore Assume one or more elements is returned.
+  // @ts-expect-error Assume one or more elements is returned.
   return sibling ? [node, compile(query.rule, {space: parentSpace})] : node
 }
 
