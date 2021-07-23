@@ -145,12 +145,14 @@ test('fromSelector()', function (t) {
   )
 
   t.deepEqual(
+    // @ts-expect-error: fine.
     fromSelector('svg altGlyph').children[0].tagName,
     'altGlyph',
     'space (#4)'
   )
 
   t.deepEqual(
+    // @ts-expect-error: fine.
     fromSelector('div svg + altGlyph').children[1].tagName,
     'altglyph',
     'space (#5)'
