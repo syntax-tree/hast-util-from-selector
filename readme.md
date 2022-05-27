@@ -8,17 +8,57 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**hast**][hast] utility to create nodes from an advanced CSS selector.
+[hast][] utility to create nodes from a complex CSS selectors.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`fromSelector([selector][, options])`](#fromselectorselector-options)
+*   [Support](#support)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a utility that can generate elements from complex CSS selectors.
+
+## When should I use this?
+
+You can use this when you’re generating a bunch of elements, and manually
+creating objects each time is starting to feel like a waste.
+This package is much more powerful than
+[`hast-util-parse-selector`][hast-util-parse-selector],
+and similar to [`hastscript`][hastscript].
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-from-selector
+```
+
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {fromSelector} from 'https://esm.sh/hast-util-from-selector@2'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {fromSelector} from 'https://esm.sh/hast-util-from-selector@2?bundle'
+</script>
 ```
 
 ## Use
@@ -56,22 +96,22 @@ Yields:
 
 ## API
 
-This package exports the following identifiers: `fromSelector`.
+This package exports the identifier `fromSelector`.
 There is no default export.
 
 ### `fromSelector([selector][, options])`
 
-Create one or more [*element*][element] [*node*][node]s from a CSS selector.
+Create one or more [*element*][element]s from a CSS selector.
 
 ###### Parameters
 
 *   `selector` (`string`, optional)
     — CSS selector
 *   `space` (`string`, optional)
-    — Treated as `options.space`
+    — treated as `options.space`
 *   `options.space` (enum, `'svg'` or `'html'`, default: `'html'`)
-    — Which space first element in the selector is in.
-    When an `svg` is created in HTML, the space is switched automatically to SVG
+    — which space first element in the selector is in.
+    When an `svg` is created in HTML, the space is automatically switched to SVG
 
 ###### Returns
 
@@ -90,13 +130,25 @@ Create one or more [*element*][element] [*node*][node]s from a CSS selector.
 *   [x] `section h1 + p` (next-sibling combinator, *not at root*)
 *   [x] `section h1 ~ p` (subsequent-sibling combinator, *not at root*)
 
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional types `Options` and `Space`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
+
 ## Security
 
 Use of `from-selector` can open you up to a [cross-site scripting (XSS)][xss]
 attack as values are injected into the syntax tree.
 
 Either do not use user input in `from-selector` or use
-[`hast-util-santize`][sanitize].
+[`hast-util-santize`][hast-util-sanitize].
 
 ## Related
 
@@ -105,8 +157,8 @@ Either do not use user input in `from-selector` or use
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
@@ -147,22 +199,32 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://wooorm.com
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[support]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
 [hast]: https://github.com/syntax-tree/hast
-
-[node]: https://github.com/syntax-tree/hast#nodes
 
 [element]: https://github.com/syntax-tree/hast#element
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
-[sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+[hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+
+[hast-util-parse-selector]: https://github.com/syntax-tree/hast-util-parse-selector
+
+[hastscript]: https://github.com/syntax-tree/hastscript
