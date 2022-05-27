@@ -62,7 +62,7 @@ function selectors(_) {
 /**
  * @param {CssRuleSet} query
  * @param {Context} config
- * @returns {HastElement|Array.<HastElement>}
+ * @returns {HastElement|Array<HastElement>}
  */
 function ruleSet(query, config) {
   // @ts-expect-error Assume one or more elements is returned.
@@ -72,7 +72,7 @@ function ruleSet(query, config) {
 /**
  * @param {CssRule} query
  * @param {Context} config
- * @returns {HastElement|Array.<HastElement>}
+ * @returns {HastElement|Array<HastElement>}
  */
 function rule(query, config) {
   const parentSpace = config.space
@@ -110,7 +110,7 @@ function rule(query, config) {
 }
 
 /**
- * @param {Array.<CssRulePseudo>} pseudos
+ * @param {Array<CssRulePseudo>} pseudos
  * @returns {HastProperties}
  */
 function pseudosToHast(pseudos) {
@@ -128,7 +128,7 @@ function pseudosToHast(pseudos) {
 }
 
 /**
- * @param {Array.<CssRuleAttr>} attrs
+ * @param {Array<CssRuleAttr>} attrs
  * @returns {HastProperties}
  */
 function attrsToHast(attrs) {
