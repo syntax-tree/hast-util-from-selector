@@ -22,7 +22,6 @@ import {h, s} from 'hastscript'
 import {zwitch} from 'zwitch'
 import {CssSelectorParser} from 'css-selector-parser'
 
-// @ts-expect-error: hush.
 const compile = zwitch('type', {handlers: {selectors, ruleSet, rule}})
 
 const parser = new CssSelectorParser()
@@ -47,7 +46,6 @@ export function fromSelector(selector, space) {
   }
 
   return (
-    // @ts-expect-error Assume one element is returned.
     compile(parser.parse(selector || ''), config) || build(config.space)('')
   )
 }
@@ -94,7 +92,6 @@ function rule(query, config) {
     }
   }
 
-  // @ts-expect-error Assume one or more elements is returned.
   const node = build(space)(
     name,
     Object.assign(
@@ -105,7 +102,6 @@ function rule(query, config) {
     !query.rule || sibling ? [] : compile(query.rule, {space})
   )
 
-  // @ts-expect-error Assume one or more elements is returned.
   return sibling ? [node, compile(query.rule, {space: parentSpace})] : node
 }
 
