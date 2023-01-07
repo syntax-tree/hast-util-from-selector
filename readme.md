@@ -17,7 +17,9 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`fromSelector([selector][, options])`](#fromselectorselector-options)
+    *   [`fromSelector(selector?[, options|space])`](#fromselectorselector-optionsspace)
+    *   [`Options`](#options)
+    *   [`Space`](#space)
 *   [Support](#support)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
@@ -41,7 +43,7 @@ and similar to [`hastscript`][hastscript].
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-from-selector
@@ -96,27 +98,46 @@ Yields:
 
 ## API
 
-This package exports the identifier `fromSelector`.
+This package exports the identifier [`fromSelector`][fromselector].
 There is no default export.
 
-### `fromSelector([selector][, options])`
+### `fromSelector(selector?[, options|space])`
 
-Create one or more [*element*][element]s from a CSS selector.
+Create one or more [`Element`][element]s from a CSS selector.
 
 ###### Parameters
 
 *   `selector` (`string`, optional)
     — CSS selector
-*   `space` (`string`, optional)
+*   `options` ([`Options`][options], optional)
+    — configuration
+*   `space` ([`Space`][space], optional)
     — treated as `options.space`
-*   `options.space` (enum, `'svg'` or `'html'`, default: `'html'`)
-    — which space first element in the selector is in.
-    When an `svg` element is created in HTML, the space is automatically
-    switched to SVG
 
 ###### Returns
 
 [`Element`][element].
+
+### `Options`
+
+Configuration (TypeScript type).
+
+###### Fields
+
+*   `space` ([`Space`][space], optional)
+    — which space first element in the selector is in.
+    When an `svg` element is created in HTML, the space is automatically
+    switched to SVG
+
+### `Space`
+
+Name of namespace (TypeScript type).
+
+###### Type
+
+```ts
+type Space = 'html' | 'svg'
+```
 
 ## Support
 
@@ -134,19 +155,20 @@ Create one or more [*element*][element]s from a CSS selector.
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `Options` and `Space`.
+It exports the additional types [`Options`][options] and [`Space`][space].
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
 
-Use of `from-selector` can open you up to a [cross-site scripting (XSS)][xss]
-attack as values are injected into the syntax tree.
+Use of `hast-util-from-selector` can open you up to a
+[cross-site scripting (XSS)][xss] attack as values are injected into the syntax
+tree.
 
 Either do not use user input in `from-selector` or use
 [`hast-util-santize`][hast-util-sanitize].
@@ -229,3 +251,9 @@ abide by its terms.
 [hast-util-parse-selector]: https://github.com/syntax-tree/hast-util-parse-selector
 
 [hastscript]: https://github.com/syntax-tree/hastscript
+
+[fromselector]: #fromselectorselector-optionsspace
+
+[options]: #options
+
+[space]: #space
