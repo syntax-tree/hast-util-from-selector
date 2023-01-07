@@ -2,8 +2,15 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h, s} from 'hastscript'
 import {fromSelector} from './index.js'
+import * as mod from './index.js'
 
 test('fromSelector()', () => {
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['fromSelector'],
+    'should expose the public api'
+  )
+
   assert.throws(
     () => {
       fromSelector('@supports (transform-origin: 5% 5%) {}')
