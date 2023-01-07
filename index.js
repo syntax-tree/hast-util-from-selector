@@ -1,28 +1,30 @@
 /**
- * @typedef {import('css-selector-parser').RuleAttr} CssRuleAttr
- * @typedef {import('css-selector-parser').RulePseudo} CssRulePseudo
- * @typedef {import('css-selector-parser').Selectors} CssSelectors
- * @typedef {import('css-selector-parser').RuleSet} CssRuleSet
- * @typedef {import('css-selector-parser').Rule} CssRule
+ * @typedef {import('css-selector-parser').RuleAttr} RuleAttr
+ * @typedef {import('css-selector-parser').RulePseudo} RulePseudo
+ * @typedef {import('css-selector-parser').Rule} Rule
  *
  * @typedef {import('hast').Element} HastElement
  * @typedef {import('hast').Properties} HastProperties
  *
- * @typedef {'html'|'svg'} Space
+ * @typedef {'html' | 'svg'} Space
+ *   Name of namespace.
  *
  * @typedef Options
+ *   Configuration.
  * @property {Space} [space]
+ *   Which space first element in the selector is in.
  *
- * @typedef Context
+ *   When an `svg` element is created in HTML, the space is automatically
+ *   switched to SVG.
+ *
+ * @typedef State
+ *   Info on current context.
  * @property {Space} space
- * @property {boolean} root
+ *   Current space.
  */
 
 import {h, s} from 'hastscript'
-import {zwitch} from 'zwitch'
 import {CssSelectorParser} from 'css-selector-parser'
-
-const compile = zwitch('type', {handlers: {selectors, ruleSet, rule}})
 
 const parser = new CssSelectorParser()
 
@@ -31,85 +33,99 @@ parser.registerNestingOperators('>', '+', '~')
 parser.registerAttrEqualityMods('~', '|', '^', '$', '*')
 
 /**
- * @param {string} [selector='']
- * @param {Space|Options} [space='html']
+ * Turn a selector into a tree.
+ *
+ * @param {string | null | undefined} [selector='']
+ *   CSS selector.
+ * @param {Space | Options | null | undefined} [space='html']
+ *   Space or configuration.
  * @returns {HastElement}
+ *   Built tree.
  */
 export function fromSelector(selector, space) {
-  /** @type {Context} */
-  const config = {
+  /** @type {State} */
+  const state = {
     space:
       (space && typeof space === 'object' && space.space) ||
       (typeof space === 'string' && space) ||
-      'html',
-    root: true
+      'html'
   }
 
-  return (
-    compile(parser.parse(selector || ''), config) || build(config.space)('')
-  )
+  const query = parser.parse(selector || '')
+
+  if (query && query.type === 'selectors') {
+    throw new Error('Cannot handle selector list')
+  }
+
+  const result = query ? rule(query.rule, state) : []
+
+  if (
+    query &&
+    query.rule.rule &&
+    (query.rule.rule.nestingOperator === '+' ||
+      query.rule.rule.nestingOperator === '~')
+  ) {
+    throw new Error(
+      'Cannot handle sibling combinator `' +
+        query.rule.rule.nestingOperator +
+        '` at root'
+    )
+  }
+
+  return result[0] || build(state.space)('')
 }
 
 /**
- * @param {CssSelectors} _
+ * Turn a rule into one or more elements.
+ *
+ * @param {Rule} query
+ *   Selector.
+ * @param {State} state
+ *   Info on current context.
+ * @returns {Array<HastElement>}
+ *   One or more elements.
  */
-function selectors(_) {
-  throw new Error('Cannot handle selector list')
-}
+function rule(query, state) {
+  const space =
+    state.space === 'html' && query.tagName === 'svg' ? 'svg' : state.space
 
-/**
- * @param {CssRuleSet} query
- * @param {Context} config
- * @returns {HastElement|Array<HastElement>}
- */
-function ruleSet(query, config) {
-  // @ts-expect-error Assume one or more elements is returned.
-  return compile(query.rule, config)
-}
+  checkPseudos(query.pseudos || [])
 
-/**
- * @param {CssRule} query
- * @param {Context} config
- * @returns {HastElement|Array<HastElement>}
- */
-function rule(query, config) {
-  const parentSpace = config.space
-  const name = query.tagName === '*' ? '' : query.tagName || ''
-  const space = parentSpace === 'html' && name === 'svg' ? 'svg' : parentSpace
-  /** @type {boolean|undefined} */
-  let sibling
+  const node = build(space)(query.tagName === '*' ? '' : query.tagName || '', {
+    id: query.id,
+    className: query.classNames,
+    ...attrsToHast(query.attrs || [])
+  })
+  const results = [node]
 
   if (query.rule) {
-    sibling =
-      query.rule.nestingOperator === '+' || query.rule.nestingOperator === '~'
-
-    if (sibling && config.root) {
-      throw new Error(
-        'Cannot handle sibling combinator `' +
-          query.rule.nestingOperator +
-          '` at root'
-      )
+    // Sibling.
+    if (
+      query.rule.nestingOperator === '+' ||
+      query.rule.nestingOperator === '~'
+    ) {
+      results.push(...rule(query.rule, state))
+    }
+    // Descendant.
+    else {
+      node.children.push(...rule(query.rule, {space}))
     }
   }
 
-  const node = build(space)(
-    name,
-    Object.assign(
-      {id: query.id, className: query.classNames},
-      pseudosToHast(query.pseudos || []),
-      attrsToHast(query.attrs || [])
-    ),
-    !query.rule || sibling ? [] : compile(query.rule, {space})
-  )
-
-  return sibling ? [node, compile(query.rule, {space: parentSpace})] : node
+  return results
 }
 
 /**
- * @param {Array<CssRulePseudo>} pseudos
- * @returns {HastProperties}
+ * Check pseudo selectors.
+ *
+ * @param {Array<RulePseudo>} pseudos
+ *   Pseudo selectors.
+ * @returns {void}
+ *   Nothing.
+ * @throws {Error}
+ *   When a pseudo is defined.
  */
-function pseudosToHast(pseudos) {
+function checkPseudos(pseudos) {
   const pseudo = pseudos[0]
 
   if (pseudo) {
@@ -119,23 +135,23 @@ function pseudosToHast(pseudos) {
 
     throw new Error('Cannot handle pseudo-element or empty pseudo-class')
   }
-
-  return {}
 }
 
 /**
- * @param {Array<CssRuleAttr>} attrs
+ * Turn attribute selectors into properties.
+ *
+ * @param {Array<RuleAttr>} attrs
+ *   Attribute selectors.
  * @returns {HastProperties}
+ *   Properties.
  */
 function attrsToHast(attrs) {
-  let index = -1
   /** @type {HastProperties} */
   const props = {}
-  /** @type {CssRuleAttr} */
-  let attr
+  let index = -1
 
   while (++index < attrs.length) {
-    attr = attrs[index]
+    const attr = attrs[index]
 
     if ('operator' in attr) {
       if (attr.operator === '=') {
@@ -155,7 +171,9 @@ function attrsToHast(attrs) {
 
 /**
  * @param {Space} space
+ *   Space.
  * @returns {typeof h}
+ *   `h`.
  */
 function build(space) {
   return space === 'html' ? h : s

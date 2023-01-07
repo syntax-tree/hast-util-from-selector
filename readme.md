@@ -111,7 +111,8 @@ Create one or more [*element*][element]s from a CSS selector.
     — treated as `options.space`
 *   `options.space` (enum, `'svg'` or `'html'`, default: `'html'`)
     — which space first element in the selector is in.
-    When an `svg` is created in HTML, the space is automatically switched to SVG
+    When an `svg` element is created in HTML, the space is automatically
+    switched to SVG
 
 ###### Returns
 
