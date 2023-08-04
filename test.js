@@ -15,7 +15,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector('@supports (transform-origin: 5% 5%) {}')
     },
-    /Error: Rule expected but "@" found/,
+    /Expected rule but "@" found/,
     'should throw w/ invalid selector'
   )
 
@@ -23,7 +23,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector('a, b')
     },
-    /Error: Cannot handle selector list/,
+    /Cannot handle selector list/,
     'should throw w/ multiple selector'
   )
 
@@ -31,7 +31,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector('a + b')
     },
-    /Error: Cannot handle sibling combinator `\+` at root/,
+    /Cannot handle sibling combinator `\+` at root/,
     'should throw w/ next-sibling combinator at root'
   )
 
@@ -39,7 +39,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector('a ~ b')
     },
-    /Error: Cannot handle sibling combinator `~` at root/,
+    /Cannot handle sibling combinator `~` at root/,
     'should throw w/ subsequent-sibling combinator at root'
   )
 
@@ -47,7 +47,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector('[foo%=bar]')
     },
-    /Error: Expected "=" but "%" found./,
+    /Expected a valid attribute selector operator/,
     'should throw w/ attribute modifiers'
   )
 
@@ -55,7 +55,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector('[foo~=bar]')
     },
-    /Error: Cannot handle attribute equality modifier `~=`/,
+    /Cannot handle attribute equality modifier `~=`/,
     'should throw w/ attribute modifiers'
   )
 
@@ -63,7 +63,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector(':active')
     },
-    /Error: Cannot handle pseudo-selector `active`/,
+    /Cannot handle pseudo class `active`/,
     'should throw on pseudo classes'
   )
 
@@ -71,7 +71,7 @@ test('fromSelector()', () => {
     () => {
       fromSelector(':nth-foo(2n+1)')
     },
-    /Error: Cannot handle pseudo-selector `nth-foo`/,
+    /Unknown pseudo-class/,
     'should throw on pseudo class “functions”'
   )
 
@@ -79,13 +79,13 @@ test('fromSelector()', () => {
     () => {
       fromSelector('::before')
     },
-    /Error: Cannot handle pseudo-element or empty pseudo-class/,
+    /Cannot handle pseudo element `before`/,
     'should throw on invalid pseudo elements'
   )
 
   assert.deepEqual(fromSelector(), h(''), 'should support no selector')
   assert.deepEqual(fromSelector(''), h(''), 'should support the empty string')
-  assert.deepEqual(fromSelector(' '), h(''), 'should support whitespace only')
+
   assert.deepEqual(
     fromSelector('*'),
     h(''),
@@ -184,7 +184,7 @@ test('fromSelector()', () => {
 
   assert.deepEqual(
     fromSelector(
-      'p svg[viewbox=0 0 10 10] circle[cx=10][cy=10][r=10] altGlyph'
+      'p svg[viewbox="0 0 10 10"] circle[cx=10][cy=10][r=10] altGlyph'
     ),
     h('p', [
       s('svg', {viewBox: '0 0 10 10'}, [

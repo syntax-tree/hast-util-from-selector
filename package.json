@@ -37,7 +37,8 @@
   ],
   "dependencies": {
     "@types/hast": "^3.0.0",
-    "css-selector-parser": "^1.0.0",
+    "css-selector-parser": "^2.0.0",
+    "devlop": "^1.0.0",
     "hastscript": "^8.0.0"
   },
   "devDependencies": {
@@ -68,7 +69,10 @@
     "trailingComma": "none"
   },
   "xo": {
-    "prettier": true
+    "prettier": true,
+    "rules": {
+      "unicorn/prefer-at": "off"
+    }
   },
   "remarkConfig": {
     "plugins": [
