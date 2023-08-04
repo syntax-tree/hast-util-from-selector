@@ -17,7 +17,7 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`fromSelector(selector?[, options|space])`](#fromselectorselector-optionsspace)
+    *   [`fromSelector(selector?[, options])`](#fromselectorselector-options)
     *   [`Options`](#options)
     *   [`Space`](#space)
 *   [Support](#support)
@@ -68,7 +68,7 @@ In browsers with [`esm.sh`][esmsh]:
 ```js
 import {fromSelector} from 'hast-util-from-selector'
 
-console.log(fromSelector('p svg[viewbox=0 0 10 10] circle[cx=10][cy=10][r=10]'))
+console.log(fromSelector('p svg[viewbox="0 0 10 10"] circle[cx=10][cy=10][r=10]'))
 ```
 
 Yields:
@@ -101,7 +101,7 @@ Yields:
 This package exports the identifier [`fromSelector`][fromselector].
 There is no default export.
 
-### `fromSelector(selector?[, options|space])`
+### `fromSelector(selector?[, options])`
 
 Create one or more [`Element`][element]s from a CSS selector.
 
@@ -111,8 +111,6 @@ Create one or more [`Element`][element]s from a CSS selector.
     — CSS selector
 *   `options` ([`Options`][options], optional)
     — configuration
-*   `space` ([`Space`][space], optional)
-    — treated as `options.space`
 
 ###### Returns
 
@@ -252,7 +250,7 @@ abide by its terms.
 
 [hastscript]: https://github.com/syntax-tree/hastscript
 
-[fromselector]: #fromselectorselector-optionsspace
+[fromselector]: #fromselectorselector-options
 
 [options]: #options
 

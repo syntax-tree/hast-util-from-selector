@@ -150,28 +150,24 @@ test('fromSelector', async function (t) {
   })
 
   await t.test('should support space (#2)', async function () {
-    assert.equal(fromSelector('altGlyph', 'svg').tagName, 'altGlyph')
-  })
-
-  await t.test('should support space (#3)', async function () {
     assert.equal(fromSelector('altGlyph', {space: 'svg'}).tagName, 'altGlyph')
   })
 
-  await t.test('should support space (#4)', async function () {
+  await t.test('should support space (#3)', async function () {
     const result = fromSelector('svg altGlyph')
     const child = result.children[0]
     assert(child.type === 'element')
     assert.equal(child.tagName, 'altGlyph')
   })
 
-  await t.test('should support space (#5)', async function () {
+  await t.test('should support space (#4)', async function () {
     const result = fromSelector('div svg + altGlyph')
     const child = result.children[1]
     assert(child.type === 'element')
     assert.equal(child.tagName, 'altglyph')
   })
 
-  await t.test('should support space (#6)', async function () {
+  await t.test('should support space (#5)', async function () {
     assert.deepEqual(
       fromSelector(
         'p svg[viewbox="0 0 10 10"] circle[cx=10][cy=10][r=10] altGlyph'
