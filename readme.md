@@ -52,14 +52,14 @@ npm install hast-util-from-selector
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {fromSelector} from 'https://esm.sh/hast-util-from-selector@2'
+import {fromSelector} from 'https://esm.sh/hast-util-from-selector@3'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {fromSelector} from 'https://esm.sh/hast-util-from-selector@2?bundle'
+  import {fromSelector} from 'https://esm.sh/hast-util-from-selector@3?bundle'
 </script>
 ```
 
