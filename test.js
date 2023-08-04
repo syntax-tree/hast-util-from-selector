@@ -2,195 +2,185 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h, s} from 'hastscript'
 import {fromSelector} from './index.js'
-import * as mod from './index.js'
 
-test('fromSelector()', () => {
-  assert.deepEqual(
-    Object.keys(mod).sort(),
-    ['fromSelector'],
-    'should expose the public api'
-  )
+test('fromSelector', async function (t) {
+  await t.test('should expose the public api', async function () {
+    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
+      'fromSelector'
+    ])
+  })
 
-  assert.throws(
-    () => {
+  await t.test('should throw w/ invalid selector', async function () {
+    assert.throws(function () {
       fromSelector('@supports (transform-origin: 5% 5%) {}')
-    },
-    /Expected rule but "@" found/,
-    'should throw w/ invalid selector'
-  )
+    }, /Expected rule but "@" found/)
+  })
 
-  assert.throws(
-    () => {
+  await t.test('should throw w/ multiple selector', async function () {
+    assert.throws(function () {
       fromSelector('a, b')
-    },
-    /Cannot handle selector list/,
-    'should throw w/ multiple selector'
+    }, /Cannot handle selector list/)
+  })
+
+  await t.test(
+    'should throw w/ next-sibling combinator at root',
+    async function () {
+      assert.throws(function () {
+        fromSelector('a + b')
+      }, /Cannot handle sibling combinator `\+` at root/)
+    }
   )
 
-  assert.throws(
-    () => {
-      fromSelector('a + b')
-    },
-    /Cannot handle sibling combinator `\+` at root/,
-    'should throw w/ next-sibling combinator at root'
+  await t.test(
+    'should throw w/ subsequent-sibling combinator at root',
+    async function () {
+      assert.throws(function () {
+        fromSelector('a ~ b')
+      }, /Cannot handle sibling combinator `~` at root/)
+    }
   )
 
-  assert.throws(
-    () => {
-      fromSelector('a ~ b')
-    },
-    /Cannot handle sibling combinator `~` at root/,
-    'should throw w/ subsequent-sibling combinator at root'
-  )
-
-  assert.throws(
-    () => {
+  await t.test('should throw w/ attribute modifiers', async function () {
+    assert.throws(function () {
       fromSelector('[foo%=bar]')
-    },
-    /Expected a valid attribute selector operator/,
-    'should throw w/ attribute modifiers'
-  )
+    }, /Expected a valid attribute selector operator/)
+  })
 
-  assert.throws(
-    () => {
+  await t.test('should throw w/ attribute modifiers', async function () {
+    assert.throws(function () {
       fromSelector('[foo~=bar]')
-    },
-    /Cannot handle attribute equality modifier `~=`/,
-    'should throw w/ attribute modifiers'
-  )
+    }, /Cannot handle attribute equality modifier `~=`/)
+  })
 
-  assert.throws(
-    () => {
+  await t.test('should throw on pseudo classes', async function () {
+    assert.throws(function () {
       fromSelector(':active')
-    },
-    /Cannot handle pseudo class `active`/,
-    'should throw on pseudo classes'
-  )
+    }, /Cannot handle pseudo class `active`/)
+  })
 
-  assert.throws(
-    () => {
+  await t.test('should throw on pseudo class “functions”', async function () {
+    assert.throws(function () {
       fromSelector(':nth-foo(2n+1)')
-    },
-    /Unknown pseudo-class/,
-    'should throw on pseudo class “functions”'
-  )
+    }, /Unknown pseudo-class/)
+  })
 
-  assert.throws(
-    () => {
+  await t.test('should throw on invalid pseudo elements', async function () {
+    assert.throws(function () {
       fromSelector('::before')
-    },
-    /Cannot handle pseudo element `before`/,
-    'should throw on invalid pseudo elements'
+    }, /Cannot handle pseudo element `before`/)
+  })
+
+  await t.test('should support no selector', async function () {
+    assert.deepEqual(fromSelector(), h(''))
+  })
+
+  await t.test('should support the empty string', async function () {
+    assert.deepEqual(fromSelector(''), h(''))
+  })
+
+  await t.test('should support the universal selector', async function () {
+    assert.deepEqual(fromSelector('*'), h(''))
+  })
+
+  await t.test('should support the descendant combinator', async function () {
+    assert.deepEqual(fromSelector('p i s'), h('p', h('i', h('s'))))
+  })
+
+  await t.test('should support the child combinator', async function () {
+    assert.deepEqual(fromSelector('p > i > s'), h('p', h('i', h('s'))))
+  })
+
+  await t.test('should support the next-sibling combinator', async function () {
+    assert.deepEqual(fromSelector('p i + s'), h('p', [h('i'), h('s')]))
+  })
+
+  await t.test(
+    'should support the subsequent-sibling combinator',
+    async function () {
+      assert.deepEqual(fromSelector('p i ~ s'), h('p', [h('i'), h('s')]))
+    }
   )
 
-  assert.deepEqual(fromSelector(), h(''), 'should support no selector')
-  assert.deepEqual(fromSelector(''), h(''), 'should support the empty string')
+  await t.test('should support a tag name', async function () {
+    assert.deepEqual(fromSelector('a'), h('a'))
+  })
 
-  assert.deepEqual(
-    fromSelector('*'),
-    h(''),
-    'should support the universal selector'
-  )
+  await t.test('should support a class', async function () {
+    assert.deepEqual(fromSelector('.a'), h('.a'))
+  })
 
-  assert.deepEqual(
-    fromSelector('p i s'),
-    h('p', h('i', h('s'))),
-    'should support the descendant combinator'
-  )
+  await t.test('should support a tag and a class', async function () {
+    assert.deepEqual(fromSelector('a.b'), h('a.b'))
+  })
 
-  assert.deepEqual(
-    fromSelector('p > i > s'),
-    h('p', h('i', h('s'))),
-    'should support the child combinator'
-  )
+  await t.test('should support an id', async function () {
+    assert.deepEqual(fromSelector('#b'), h('#b'))
+  })
 
-  assert.deepEqual(
-    fromSelector('p i + s'),
-    h('p', [h('i'), h('s')]),
-    'should support the next-sibling combinator'
-  )
+  await t.test('should support a tag and an id', async function () {
+    assert.deepEqual(fromSelector('a#b'), h('a#b'))
+  })
 
-  assert.deepEqual(
-    fromSelector('p i ~ s'),
-    h('p', [h('i'), h('s')]),
-    'should support the subsequent-sibling combinator'
-  )
+  await t.test('should support all together', async function () {
+    assert.deepEqual(fromSelector('a#b.c.d'), h('a#b.c.d'))
+  })
 
-  assert.deepEqual(fromSelector('a'), h('a'), 'should support a tag name')
-  assert.deepEqual(fromSelector('.a'), h('.a'), 'should support a class')
-  assert.deepEqual(
-    fromSelector('a.b'),
-    h('a.b'),
-    'should support a tag and a class'
-  )
-  assert.deepEqual(fromSelector('#b'), h('#b'), 'should support an id')
-  assert.deepEqual(
-    fromSelector('a#b'),
-    h('a#b'),
-    'should support a tag and an id'
-  )
-  assert.deepEqual(
-    fromSelector('a#b.c.d'),
-    h('a#b.c.d'),
-    'should support all together'
-  )
-  assert.deepEqual(fromSelector('a#b#c'), h('a#c'), 'should use the last id')
-  assert.deepEqual(fromSelector('A').tagName, 'a', 'should normalize casing')
+  await t.test('should use the last id', async function () {
+    assert.deepEqual(fromSelector('a#b#c'), h('a#c'))
+  })
 
-  assert.deepEqual(
-    fromSelector('[a]'),
-    h('', {a: true}),
-    'should support attributes (#1)'
-  )
-  assert.deepEqual(
-    fromSelector('[a=b]'),
-    h('', {a: 'b'}),
-    'should support attributes (#2)'
-  )
+  await t.test('should normalize casing', async function () {
+    assert.equal(fromSelector('A').tagName, 'a')
+  })
 
-  assert.deepEqual(
-    fromSelector('.a.b[class=c]'),
-    h('.a.b.c'),
-    'should support class and class attributes'
-  )
+  await t.test('should support attributes (#1)', async function () {
+    assert.deepEqual(fromSelector('[a]'), h('', {a: true}))
+  })
 
-  assert.deepEqual(fromSelector('altGlyph').tagName, 'altglyph', 'space (#1)')
+  await t.test('should support attributes (#2)', async function () {
+    assert.deepEqual(fromSelector('[a=b]'), h('', {a: 'b'}))
+  })
 
-  assert.deepEqual(
-    fromSelector('altGlyph', 'svg').tagName,
-    'altGlyph',
-    'space (#2)'
-  )
+  await t.test('should support class and class attributes', async function () {
+    assert.deepEqual(fromSelector('.a.b[class=c]'), h('.a.b.c'))
+  })
 
-  assert.deepEqual(
-    fromSelector('altGlyph', {space: 'svg'}).tagName,
-    'altGlyph',
-    'space (#3)'
-  )
+  await t.test('should support space (#1)', async function () {
+    assert.equal(fromSelector('altGlyph').tagName, 'altglyph')
+  })
 
-  assert.deepEqual(
-    // @ts-expect-error: fine.
-    fromSelector('svg altGlyph').children[0].tagName,
-    'altGlyph',
-    'space (#4)'
-  )
+  await t.test('should support space (#2)', async function () {
+    assert.equal(fromSelector('altGlyph', 'svg').tagName, 'altGlyph')
+  })
 
-  assert.deepEqual(
-    // @ts-expect-error: fine.
-    fromSelector('div svg + altGlyph').children[1].tagName,
-    'altglyph',
-    'space (#5)'
-  )
+  await t.test('should support space (#3)', async function () {
+    assert.equal(fromSelector('altGlyph', {space: 'svg'}).tagName, 'altGlyph')
+  })
 
-  assert.deepEqual(
-    fromSelector(
-      'p svg[viewbox="0 0 10 10"] circle[cx=10][cy=10][r=10] altGlyph'
-    ),
-    h('p', [
-      s('svg', {viewBox: '0 0 10 10'}, [
-        s('circle', {cx: '10', cy: '10', r: '10'}, [s('altGlyph')])
+  await t.test('should support space (#4)', async function () {
+    const result = fromSelector('svg altGlyph')
+    const child = result.children[0]
+    assert(child.type === 'element')
+    assert.equal(child.tagName, 'altGlyph')
+  })
+
+  await t.test('should support space (#5)', async function () {
+    const result = fromSelector('div svg + altGlyph')
+    const child = result.children[1]
+    assert(child.type === 'element')
+    assert.equal(child.tagName, 'altglyph')
+  })
+
+  await t.test('should support space (#6)', async function () {
+    assert.deepEqual(
+      fromSelector(
+        'p svg[viewbox="0 0 10 10"] circle[cx=10][cy=10][r=10] altGlyph'
+      ),
+      h('p', [
+        s('svg', {viewBox: '0 0 10 10'}, [
+          s('circle', {cx: '10', cy: '10', r: '10'}, [s('altGlyph')])
+        ])
       ])
-    ]),
-    'space (#6)'
-  )
+    )
+  })
 })
