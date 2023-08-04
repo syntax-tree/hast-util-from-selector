@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {h, s} from 'hastscript'
-import {fromSelector} from './index.js'
+import {fromSelector} from 'hast-util-from-selector'
 
 test('fromSelector', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
-      'fromSelector'
-    ])
+    assert.deepEqual(
+      Object.keys(await import('hast-util-from-selector')).sort(),
+      ['fromSelector']
+    )
   })
 
   await t.test('should throw w/ invalid selector', async function () {
