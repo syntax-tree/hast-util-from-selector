@@ -1,38 +1,8 @@
 {
-  "name": "hast-util-from-selector",
-  "version": "3.0.0",
-  "description": "hast utility to parse CSS selectors to hast nodes",
-  "license": "MIT",
-  "keywords": [
-    "unist",
-    "hast",
-    "hast-util",
-    "util",
-    "utility",
-    "html",
-    "svg",
-    "selector",
-    "parse",
-    "css",
-    "hyperscript"
-  ],
-  "repository": "syntax-tree/hast-util-from-selector",
-  "bugs": "https://github.com/syntax-tree/hast-util-from-selector/issues",
-  "funding": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/unified"
-  },
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+  "bugs": "https://github.com/syntax-tree/hast-util-from-selector/issues",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
-  ],
-  "sideEffects": false,
-  "type": "module",
-  "exports": "./index.js",
-  "files": [
-    "lib/",
-    "index.d.ts",
-    "index.js"
   ],
   "dependencies": {
     "@types/hast": "^3.0.0",
@@ -40,6 +10,7 @@
     "devlop": "^1.0.0",
     "hastscript": "^8.0.0"
   },
+  "description": "hast utility to parse CSS selectors to hast nodes",
   "devDependencies": {
     "@types/node": "^22.0.0",
     "c8": "^10.0.0",
@@ -51,14 +22,31 @@
     "unist-builder": "^4.0.0",
     "xo": "^0.59.0"
   },
-  "scripts": {
-    "prepack": "npm run build && npm run format",
-    "build": "tsc --build --clean && tsc --build && type-coverage",
-    "format": "remark . -qfo && prettier . -w --log-level warn && xo --fix",
-    "test-api": "node --conditions development test.js",
-    "test-coverage": "c8 --100 --reporter lcov npm run test-api",
-    "test": "npm run build && npm run format && npm run test-coverage"
+  "exports": "./index.js",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/unified"
   },
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "lib/"
+  ],
+  "keywords": [
+    "css",
+    "hast-util",
+    "hast",
+    "html",
+    "hyperscript",
+    "svg",
+    "parse",
+    "utility",
+    "util",
+    "unist",
+    "selector"
+  ],
+  "license": "MIT",
+  "name": "hast-util-from-selector",
   "prettier": {
     "bracketSpacing": false,
     "semi": false,
@@ -72,12 +60,21 @@
       "remark-preset-wooorm"
     ]
   },
+  "repository": "syntax-tree/hast-util-from-selector",
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && type-coverage",
+    "format": "remark --frail --quiet --output -- . && prettier --log-level warn --write -- . && xo --fix",
+    "test-api": "node --conditions development test.js",
+    "test-coverage": "c8 --100 --reporter lcov -- npm run test-api",
+    "test": "npm run build && npm run format && npm run test-coverage"
+  },
+  "sideEffects": false,
   "typeCoverage": {
     "atLeast": 100,
-    "detail": true,
-    "ignoreCatch": true,
     "strict": true
   },
+  "type": "module",
+  "version": "3.0.0",
   "xo": {
     "prettier": true,
     "rules": {
