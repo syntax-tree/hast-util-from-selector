@@ -12,21 +12,21 @@
 
 ## Contents
 
-*   [What is this?](#what-is-this)
-*   [When should I use this?](#when-should-i-use-this)
-*   [Install](#install)
-*   [Use](#use)
-*   [API](#api)
-    *   [`fromSelector(selector?[, options])`](#fromselectorselector-options)
-    *   [`Options`](#options)
-    *   [`Space`](#space)
-*   [Support](#support)
-*   [Types](#types)
-*   [Compatibility](#compatibility)
-*   [Security](#security)
-*   [Related](#related)
-*   [Contribute](#contribute)
-*   [License](#license)
+* [What is this?](#what-is-this)
+* [When should I use this?](#when-should-i-use-this)
+* [Install](#install)
+* [Use](#use)
+* [API](#api)
+  * [`fromSelector(selector?[, options])`](#fromselectorselector-options)
+  * [`Options`](#options)
+  * [`Space`](#space)
+* [Support](#support)
+* [Types](#types)
+* [Compatibility](#compatibility)
+* [Security](#security)
+* [Related](#related)
+* [Contribute](#contribute)
+* [License](#license)
 
 ## What is this?
 
@@ -107,10 +107,10 @@ Create one or more [`Element`][element]s from a CSS selector.
 
 ###### Parameters
 
-*   `selector` (`string`, default: `''`)
-    — CSS selector
-*   `options` ([`Options`][api-options], optional)
-    — configuration
+* `selector` (`string`, default: `''`)
+  — CSS selector
+* `options` ([`Options`][api-options], optional)
+  — configuration
 
 ###### Returns
 
@@ -122,10 +122,10 @@ Configuration (TypeScript type).
 
 ###### Fields
 
-*   `space` ([`Space`][api-space], default: `'html'`)
-    — which space first element in the selector is in.
-    When an `svg` element is created in HTML, the space is automatically
-    switched to SVG
+* `space` ([`Space`][api-space], default: `'html'`)
+  — which space first element in the selector is in.
+  When an `svg` element is created in HTML, the space is automatically
+  switched to SVG
 
 ### `Space`
 
@@ -139,16 +139,16 @@ type Space = 'html' | 'svg'
 
 ## Support
 
-*   [x] `*` (universal selector, *creates a `div` in HTML, `g` in SVG*)
-*   [x] `p` (type selector)
-*   [x] `.class` (class selector)
-*   [x] `#id` (id selector)
-*   [x] `[attr]` (attribute existence, *creates a boolean*)
-*   [x] `[attr=value]` (attribute equality)
-*   [x] `article p` (descendant combinator)
-*   [x] `article > p` (child combinator)
-*   [x] `section h1 + p` (next-sibling combinator, *not at root*)
-*   [x] `section h1 ~ p` (subsequent-sibling combinator, *not at root*)
+* [x] `*` (universal selector, *creates a `div` in HTML, `g` in SVG*)
+* [x] `p` (type selector)
+* [x] `.class` (class selector)
+* [x] `#id` (id selector)
+* [x] `[attr]` (attribute existence, *creates a boolean*)
+* [x] `[attr=value]` (attribute equality)
+* [x] `article p` (descendant combinator)
+* [x] `article > p` (child combinator)
+* [x] `section h1 + p` (next-sibling combinator, *not at root*)
+* [x] `section h1 ~ p` (subsequent-sibling combinator, *not at root*)
 
 ## Types
 
@@ -177,8 +177,8 @@ Either do not use user input in `from-selector` or use
 
 ## Related
 
-*   [`hast-util-parse-selector`](https://github.com/syntax-tree/hast-util-parse-selector)
-    — create an element from a simple CSS selector
+* [`hast-util-parse-selector`](https://github.com/syntax-tree/hast-util-parse-selector)
+  — create an element from a simple CSS selector
 
 ## Contribute
 
