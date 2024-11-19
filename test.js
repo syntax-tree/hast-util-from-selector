@@ -171,7 +171,7 @@ test('fromSelector', async function (t) {
   await t.test('should support space (#5)', async function () {
     assert.deepEqual(
       fromSelector(
-        'p svg[viewbox="0 0 10 10"] circle[cx=10][cy=10][r=10] altGlyph'
+        'p svg[viewbox="0 0 10 10"] circle[cx="10"][cy="10"][r="10"] altGlyph'
       ),
       h('p', [
         s('svg', {viewBox: '0 0 10 10'}, [

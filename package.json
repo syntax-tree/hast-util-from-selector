@@ -6,9 +6,9 @@
   ],
   "dependencies": {
     "@types/hast": "^3.0.0",
-    "css-selector-parser": "^2.0.0",
+    "css-selector-parser": "^3.0.0",
     "devlop": "^1.0.0",
-    "hastscript": "^8.0.0"
+    "hastscript": "^9.0.0"
   },
   "description": "hast utility to parse CSS selectors to hast nodes",
   "devDependencies": {
@@ -79,7 +79,9 @@
   "xo": {
     "prettier": true,
     "rules": {
-      "unicorn/prefer-at": "off"
+      "logical-assignment-operators": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-switch": "off"
     }
   }
 }
